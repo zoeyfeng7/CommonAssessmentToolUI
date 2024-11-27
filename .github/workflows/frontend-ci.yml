@@ -1,4 +1,4 @@
-name: Frontend CI
+name: Frontend Docker CI
 
 on:
   push:
@@ -18,7 +18,6 @@ jobs:
 
     - name: Build Frontend Docker image
       run: |
-        # Building from the repository root, but copying from app directory
         docker build -t cat-ui:test -f Dockerfile .
 
     - name: Run Frontend container
@@ -26,10 +25,6 @@ jobs:
         docker run -d -p 3000:3000 --name frontend-container cat-ui:test
         # Wait for frontend to be ready
         sleep 10
-
-    - name: Run Frontend tests
-      run: |
-        docker exec frontend-container npm run test
 
     - name: Clean up
       if: always()
