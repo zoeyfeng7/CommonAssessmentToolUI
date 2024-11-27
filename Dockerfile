@@ -1,16 +1,16 @@
-# Base image
 FROM node:18-alpine
 
-WORKDIR /app
+# Set working directory
+WORKDIR /frontend
 
-# Copy package files
-COPY package*.json ./
+# Copy package files from app directory
+COPY app/package*.json ./
 
-# Use npm install instead of npm ci since we don't have package-lock.json
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the frontend code
-COPY . .
+# Copy the entire app directory
+COPY app/ ./
 
 # Build the application
 RUN npm run build
