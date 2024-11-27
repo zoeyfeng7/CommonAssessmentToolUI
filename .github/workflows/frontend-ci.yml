@@ -1,5 +1,4 @@
-name: Frontend Docker CI
-
+name: Frontend CI
 on:
   push:
     branches: [ main ]
@@ -9,29 +8,12 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
     - name: Build Frontend Docker image
+      run: docker build -t cat-frontend:test .
+    - name: Run tests
       run: |
-        docker build -t cat-ui:test .
-
-    - name: Run Frontend container
-      run: |
-        docker run -d -p 3000:3000 --name frontend-container cat-ui:test
-        # Wait for frontend to be ready
+        docker run -d -p 3000:3000 --name frontend-container cat-frontend:test
         sleep 10
-
-    - name: Run Frontend tests
-      run: |
         docker exec frontend-container npm run test
-
-    - name: Clean up
-      if: always()
-      run: |
-        docker stop frontend-container || true
-        docker rm frontend-container || true
